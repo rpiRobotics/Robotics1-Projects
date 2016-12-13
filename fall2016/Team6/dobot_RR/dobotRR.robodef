@@ -1,0 +1,13 @@
+service dobotRR
+
+option version 0.5
+
+object DobotObject
+  
+    function int16[] getJointPositions()
+    function void setJointPositions(int16 q1, int16 q2, int16 q3, int16 q4, int16 grip)
+	function int16[] getGripperAngle()
+	function int16[] getPositions()
+	function void send_absolute_position(int16 x, int16 y, int16 z, int16 rot, int16 grip)
+    
+end object
