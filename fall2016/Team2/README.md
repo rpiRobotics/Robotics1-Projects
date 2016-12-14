@@ -4,8 +4,8 @@ F16 Robotics I Project
 Team 2: Double Ducker
 
 Members:
-Christopher Ho
-Mitchell Phillips
+Christopher Ho,
+Mitchell Phillips,
 Jacob Song
 
 The following MATLAB Scripts were used throughout the duration of the Fall 2016, Robotics I Project for the Trossen PhantomX Articulated Arm. 
