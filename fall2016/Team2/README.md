@@ -8,12 +8,18 @@ Christopher Ho,
 Mitchell Phillips,
 Jacob Song
 
-The following MATLAB Scripts were used throughout the duration of the Fall 2016, Robotics I Project for the Trossen PhantomX Articulated Arm. 
+The following MATLAB Scripts were used throughout the duration of the Fall 2016, Robotics I Project for the Trossen PhantomX Articulated Arm.
+
 Control of the PhantomX was done so using Robot Raconteur and the associated python servers.
+
 Requires the Robot Raconteur Image Processing Server.
+
 Utilized the desktop servers that were available in the lab.
+
 The final design and demonstration used the visualServo_Duckie.m file. 
+
 It was intended to replicate the sorting of two different colored ducks by sorting two ARTags and placing them either left or right of the arm. 
+
 The contents for the project are explained below.
 
 Note: Project is dependent on Professor Wen’s subproblem code’s and common robotics transformations, 
