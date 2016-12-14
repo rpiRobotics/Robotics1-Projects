@@ -27,3 +27,12 @@ This file goes around a pre-defined object using potential field method. It requ
 
 pathfollow.m
 The arm starts at a place within a circle and merges onto a half circle path. Figure is generated showing desired and actual path. Popup is included.
+
+pickup_duck_anyspot.m
+Locates a single duck at any location and picks and places it at a defined location. Requires LocateDuckv2, imgBG, and ikdobot.
+
+pickup_duck.m
+Picks up duck at a pre-defined position and places it at a defined location. Requires ikdobot.
+
+duck_write_try.m
+The arm traces the path of the word DUCK.
