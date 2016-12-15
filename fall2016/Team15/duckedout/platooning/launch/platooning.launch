@@ -1,0 +1,132 @@
+<launch>
+
+        <arg name="veh"/>
+        <arg name="local" default="false" doc="true for running everything you possibly can on laptop. false for everything running on vehicle."/>
+        <arg name="config" default="baseline" doc="Specify a config."/>
+        <arg name="param_file_name" default="default" doc="Specify a param file. ex:megaman." />
+        <arg name="camera" default="true" doc="camera set to false means only apriltags no camera nodes are launched"/>
+        <arg name="live" default="true" doc="live set to false means we don't run the actual camera (i.e. running from a log file" />
+        <arg name="camera_topic" default="camera_node"/>
+        <arg name="view_markers" default="true" doc="should we output markers for rviz?"/>
+        <arg name="only" default="false" doc="Only run the ground_projection part when set to true."/>
+        <arg name="verbose" default="false" />
+        <arg name="line_detector_param_file_name" default='default' /> 
+
+
+    <!-- Camera -->
+        <include if="$(arg camera)" file="$(find duckietown)/launch/camera.launch">
+                <arg name="veh" value="$(arg veh)"/>
+                <arg name="local" value="$(arg local)"/>
+                <arg name="config" value="$(arg config)"/>
+                <arg name="param_file_name" value="$(arg param_file_name)"/>
+                <arg name="raw" value="true"/>
+                <arg name="cam_info" value="true"/> 
+                <arg name="live" value="$(arg live)"/>
+                <arg name="rect" value="true" />
+        </include>
+	
+	    <include file="$(find duckietown)/machines"/>
+
+    <!-- platooning_node -->
+    <remap from="platooning_node/lane_pose" to="lane_filter_node/lane_pose"/>
+    <remap from="platooning_node/apriltags_in" to="tag_detections"/>
+    <node ns="$(arg veh)" name="platooning_node" pkg="platooning" type="platooning_node.py" output="screen" />
+ 
+        <!-- Line Detector -->
+    <remap from="line_detector_node/image" to="camera_node/image/compressed"/>
+    <include file="$(find line_detector)/launch/line_detector_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+        <arg name="param_file_name" value="$(arg line_detector_param_file_name)"/>
+    <arg name="verbose" value="$(arg verbose)" />
+    </include>
+
+   
+    <include file="$(find ground_projection)/launch/ground_projection.launch">
+             <arg name="veh" value="$(arg veh)"/>
+             <arg name="local" value="$(arg local)"/>
+             <arg name="config" value="$(arg config)"/>
+             <arg name="param_file_name" value="$(arg param_file_name)"/>
+             <arg name="camera_topic" value="$(arg camera_topic)"/>
+    </include>
+
+        <!-- Duckiebot visualizer (always local) -->
+    <node  ns="$(arg veh)" if="$(arg view_markers)" name="duckiebot_visualizer" pkg="duckiebot_visualizer" type="duckiebot_visualizer.py" output="screen">
+         <param name="~veh_name" value="$(arg veh)"/>
+         <remap from="~segment_list" to="ground_projection/lineseglist_out"/>
+    </node>
+
+
+            <!-- Lane Filter -->
+    <remap from="lane_filter_node/segment_list" to="ground_projection/lineseglist_out"/>
+    <remap from="lane_filter_node/velocity" to="forward_kinematics_node/velocity"/>
+    <include file="$(find lane_filter)/launch/lane_filter_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+        <arg name="param_file_name" value="$(arg param_file_name)"/>
+    </include>
+
+    <!-- Stop Line Filter -->
+    <remap from="stop_line_filter_node/lanewidth" to="lane_filter_node/lanewidth"/>
+    <remap from="stop_line_filter_node/lane_pose" to="lane_filter_node/lane_pose"/>
+    <remap from="stop_line_filter_node/segment_list" to="ground_projection/lineseglist_out"/>
+    <include file="$(find stop_line_filter)/launch/stop_line_filter_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+        <arg name="param_file_name" value="$(arg param_file_name)"/>
+    </include>
+
+
+    <!-- Visualize -->
+    <include file="$(find lane_filter)/launch/lane_pose_visualizer_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+    
+
+    <!-- AprilTags Detections -->
+    <remap from="image_rect" to="camera_node/image/rect" />
+    <remap from="camera_node/image/camera_info" to="camera_node/raw_camera_info" />
+    <include file="$(find apriltags_ros)/launch/apriltag_detector_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+        <arg name="param_file_name" value="$(arg param_file_name)"/>
+    </include>
+
+
+
+    <!-- run inverse_kinematics_node -->
+    <remap from="inverse_kinematics_node/car_cmd" to="platooning_node/car_cmd"/>
+    <remap from="inverse_kinematics_node/wheels_cmd" to="wheels_driver_node/wheels_cmd" />
+    <include file="$(find dagu_car)/launch/inverse_kinematics_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+    </include>
+
+    <!-- run forward_kinematics_node -->
+    <remap from="forward_kinematics_node/wheels_cmd" to="wheels_driver_node/wheels_cmd_executed" />
+    <include file="$(find dagu_car)/launch/forward_kinematics_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+    </include>
+
+    <!-- run the velocity_to_pose_node -->
+    <remap from="velocity_to_pose_node/velocity" to="forward_kinematics_node/velocity" />
+    <include file="$(find dagu_car)/launch/velocity_to_pose_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+    </include>
+
+    <!-- Wheels Driver -->
+    <include file="$(find dagu_car)/launch/wheels_driver_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+
+</launch>
