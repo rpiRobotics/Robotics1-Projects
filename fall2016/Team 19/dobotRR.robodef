@@ -1,0 +1,11 @@
+service dobotRR
+
+option version 0.5
+
+object DobotSerialInterface
+  
+    function int16[] getJointPositions()
+    function void setJointPositions(int16 q1, int16 q2, int16 q3, int16 q4)
+    function void setAbsolutePosition(int16 cartesian, int16 p1, int16 p2, int16 p3, int16 p4)
+    
+end object
