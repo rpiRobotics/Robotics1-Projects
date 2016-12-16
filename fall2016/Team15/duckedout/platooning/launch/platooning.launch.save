@@ -1,0 +1,29 @@
+<launch>
+
+	<arg name="veh"/>
+	<arg name="local" default="false"/>
+	<arg name="config" default="baseline"/>
+	<arg name="param_file_name" default="default"/>
+	<arg name="camera" default="true"/>
+	<arg name="live" default="true"/>
+	
+
+	<!-- Launching April Tag Detection Node. Publishes to "~apriltags_out" and "~tag_pose" -->
+
+	<include file="$(find duckietown)/launch/apriltags.launch">
+		
+		<arg name="veh" value="$(arg veh)"/>
+	        <arg name="local" value="$(arg local)"/>
+        	<arg name="config" value="$(arg config)"/>  
+        	<arg name="param_file_name" value="$(arg param_file_name)"/>
+        	<arg name="camera" value="$(arg camera)/>
+        	<arg name="live" value="$(arg live)"/>
+	
+	</include>
+
+	
+	
+
+		
+
+</launch>
