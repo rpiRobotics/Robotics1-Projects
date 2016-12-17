@@ -22,3 +22,7 @@ The Robot Raconteur code is dependent on having the Robot Raconteur library
 for Python and its dependencies. The connection to the duckiebot is made using
 a specific IP address. If the IP address of the duckiebot differs from the one 
 in the files, please change the code to use the duckiebot's current IP address.
+
+Running the Robot Raconteur code as Python scripts should be sufficient.
+
+Contact us hub3@rpi.edu or feldhr2@rpi.edu if you have any questions or concerns.
