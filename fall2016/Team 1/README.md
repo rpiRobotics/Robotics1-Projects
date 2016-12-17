@@ -4,6 +4,8 @@ Barry Hu & Ryan Feldhausen
 
 Duckiebot: duckieryan
 
+[Final Video](https://www.youtube.com/watch?v=lP_lX_-XLoI)
+
 In the SDCA folder is the code pertaining to our attempt at using
 machine learning to get a self-driving duckiebot that would drive
 more human-like. We do not recommend that you attempt to run the code.
