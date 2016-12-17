@@ -1,4 +1,4 @@
-Team 1: (No Project Name)
+Team 1: Duckie Adventure
 
 Barry Hu & Ryan Feldhausen
 
