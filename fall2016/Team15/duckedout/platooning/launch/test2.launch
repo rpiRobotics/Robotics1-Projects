@@ -1,0 +1,5 @@
+<launch>
+
+<include file="$(find platooning)/launch/test.launch"/>
+
+</launch>

@@ -1,0 +1,6 @@
+<launch>
+
+    <node name="talker" pkg="platooning" type="talker.py" />
+    <node name="listener" pkg="platooning" type="listener.py" />
+
+</launch>

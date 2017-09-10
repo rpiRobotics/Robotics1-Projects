@@ -1,0 +1,42 @@
+<launch>
+    <arg name="veh" doc="Name of vehicle. ex: megaman"/>
+    <arg name="local" default="false" doc="true for running on laptop. false for running on vehicle."/>
+    <arg name="config" default="baseline" doc="Specify a config."/>
+
+    <include file="$(find duckietown)/machines"/>
+
+    <!-- move2 -->
+    <node if="$(arg local)" ns="$(arg veh)" name="move2_node" pkg="platooning" type="move2.py" output="screen" />
+    <node unless="$(arg local)" machine="$(arg veh)" ns="$(arg veh)" name="move2_node" pkg="platooning" type="move2.py" output="screen" />
+
+    <!-- run inverse_kinematics_node -->
+    <remap from="inverse_kinematics_node/car_cmd" to="move2_node/car_cmd"/>
+    <remap from="inverse_kinematics_node/wheels_cmd" to="wheels_driver_node/wheels_cmd" />
+    <include file="$(find dagu_car)/launch/inverse_kinematics_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+    </include>
+
+    <!-- run forward_kinematics_node -->
+    <remap from="forward_kinematics_node/wheels_cmd" to="wheels_driver_node/wheels_cmd_executed" />
+    <include file="$(find dagu_car)/launch/forward_kinematics_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+    </include>
+
+    <!-- run the velocity_to_pose_node -->
+    <remap from="velocity_to_pose_node/velocity" to="forward_kinematics_node/velocity" />
+    <include file="$(find dagu_car)/launch/velocity_to_pose_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+    </include>
+
+    <!-- Wheels Driver -->
+    <include file="$(find dagu_car)/launch/wheels_driver_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+</launch>
