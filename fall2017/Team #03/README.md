@@ -8,14 +8,14 @@ Team Member:
     Joel Bassett
 
 
-Email: yangd6@rpi.edu
+Email: yangd6@rpi.edu; bassej4@rpi.edu
 
 
-Project: Duckiebot
+Project: DuckLyft
 
 
-Description: *insert description here*
-
+Description: Given a destination, drive safely there on the most direct route. 
+We will expand this to be able to take in multiple locations and drive to each one.
 
 
 Project Video Links: 
