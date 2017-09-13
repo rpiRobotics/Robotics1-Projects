@@ -8,7 +8,7 @@ Team Member:
   
 Email:
   xuj12@rpi.edu
-  ...
+  wiz.crystal@gmail.com
   ...
 
 Project: 
