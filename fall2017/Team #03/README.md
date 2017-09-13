@@ -1,16 +1,18 @@
-Team #
+Team # 3
 
 
-Team Member: 
+Team Member: David Yang
+             Shunong Wu
+             Joel Bassett
 
 
-Email:
+Email: yangd6@rpi.edu
 
 
-Project: 
+Project: Duckiebot
 
 
-Description:
+Description: *insert description here*
 
 
 
