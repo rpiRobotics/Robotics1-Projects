@@ -1,9 +1,11 @@
 Team # 3
 
 
-Team Member: David Yang
-             Shunong Wu
-             Joel Bassett
+Team Member: 
+
+    David Yang
+    Shunong Wu      
+    Joel Bassett
 
 
 Email: yangd6@rpi.edu
