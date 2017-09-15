@@ -1,10 +1,9 @@
 Team # 13
-
+  Stein Gate
 
 Team Member: 
   Jiawei Xu
   Yao Shang
-  Zidi Tao
   
 Email:
   xuj12@rpi.edu
