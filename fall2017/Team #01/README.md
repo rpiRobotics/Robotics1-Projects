@@ -1,16 +1,16 @@
-Team #
+Team #01
 
 
-Team Member: 
+Team Member: Sean Thammakhoune, Yinsu Zhang, Sam Ansaldo
 
 
-Email:
+Email: seantmmk@gmail.com
 
 
-Project: 
+Project: Duck Confit
 
 
-Description:
+Description: Collision Avoidance
 
 
 
