@@ -1,16 +1,16 @@
-Team #
+Team # 6
 
 
-Team Member: 
+Team Member: Zachary Ravichandran, Ruixuan Yan, Dhruv Patel
 
 
-Email:
+Email: ravicz@rpi.edu, yanr5@rpi.edu, dpatel0125@gmail.com
 
 
-Project: 
+Project: DuckieEyes
 
 
-Description:
+Description: Object Detection and Response
 
 
 
