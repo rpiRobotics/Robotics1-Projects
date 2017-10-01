@@ -1,13 +1,13 @@
-Team #
+Team #13 STEINGATE
 
 
-Team Member: 
+Team Member: Jiawei Xu, Yao Shang
 
 
-Email:
+Email: xuj12@rpi.edu
 
 
-Project: 
+Project: Duckietown
 
 
 Description:
