@@ -1,0 +1,52 @@
+<launch>
+    <arg name="veh" doc="Name of vehicle. ex: megaman"/>
+    <arg name="local" default="false" doc="true for running on laptop. false for running on vehicle."/>
+    <arg name="config" default="baseline" doc="Specify a config."/>
+    <arg name="param_file_name" default="default" doc="Specify a param file. ex:megaman." />
+    <arg name="keyboard_mapper_param_file_name" default="$(arg param_file_name)" doc="Specify a keyboard_mapper param file. ex:high_speed" />
+
+
+    <include file="$(find duckietown)/machines"/>
+    <!--teleop_twist_keyboard  -->
+    <remap from="cmd_vel" to="teleop_node/teleop"/>
+    <node ns="$(arg veh)" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_node" output="screen">
+    </node>
+
+    <!-- keyboard_mapper -->
+    <include file="$(find keyboard_mapper)/launch/keyboard_mapper_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="true"/>
+        <arg name="config" value="$(arg config)"/>
+        <arg name="param_file_name" value="$(arg keyboard_mapper_param_file_name)"/>
+    </include>
+
+    <!-- run inverse_kinematics_node -->
+    <remap from="inverse_kinematics_node/car_cmd" to="keyboard_mapper_node/car_cmd"/>
+    <remap from="inverse_kinematics_node/wheels_cmd" to="wheels_driver_node/wheels_cmd" />
+    <include file="$(find dagu_car)/launch/inverse_kinematics_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+    </include>
+
+    <!-- run forward_kinematics_node -->
+    <remap from="forward_kinematics_node/wheels_cmd" to="wheels_driver_node/wheels_cmd_executed" />
+    <include file="$(find dagu_car)/launch/forward_kinematics_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+    </include>
+
+    <!-- run the velocity_to_pose_node -->
+    <remap from="velocity_to_pose_node/velocity" to="forward_kinematics_node/velocity" />
+    <include file="$(find dagu_car)/launch/velocity_to_pose_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="local" value="$(arg local)"/>
+        <arg name="config" value="$(arg config)"/>
+    </include>
+
+    <!-- Wheels Driver -->
+    <include file="$(find dagu_car)/launch/wheels_driver_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+</launch>
