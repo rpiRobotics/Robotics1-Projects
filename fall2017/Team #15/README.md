@@ -14,6 +14,8 @@ Stephen Sutton    | suttos2@rpi.edu | stephens18
 ## Dependancies
 1. [Ros Indigo](http://wiki.ros.org/indigo/Installation/Ubuntu) 
 2. [The rethink robotics baxter sdk](http://sdk.rethinkrobotics.com/wiki/Main_Page)
+3. [Baxter PyKDL](http://sdk.rethinkrobotics.com/wiki/Baxter_PyKDL#baxter_kinematics.py)
+4. [ROS Joystick Drivers](http://wiki.ros.org/joy/Tutorials/ConfiguringALinuxJoystick)
 
 ## Project Videos
 [Google Drive Folder](https://drive.google.com/open?id=0B-lO5Q7R_x0DNm13UzZzVUtjalE) where project progress videos are posted.
