@@ -12,22 +12,23 @@ from baxter_pykdl import baxter_kinematics
 
 import baxter_interface
 import baxter_external_devices
-
 from baxter_interface import CHECK_VERSION
 
 from operator import add
 
+import math
 
-def rotate(l):
+def reset_arm(cmd, joints):
     """
-    Rotates a list left.
-
-    @param l: the list
+    Resets arm to zero configuration
     """
-    if len(l):
-        v = l[0]
-        l[:-1] = l[1:]
-        l[-1] = v
+    reset_pose = [0, -math.pi/4, 0, math.pi/4, 0, math.pi/2, 0]
+    j=0
+    for i in joints:
+        joint = joints[j]
+        cmd[joint] = reset_pose[j]
+        j+=1
+    
 
 
 def set_j(cmd, direction, joints):
@@ -40,16 +41,19 @@ def set_j(cmd, direction, joints):
 
     joint/index is to make this work in the bindings.
     """
+    neutral_quaternion = [0.49848584, 0.86663104, 0.02108932, -0.00421412]
     kin = baxter_kinematics('right')
     fk = kin.forward_position_kinematics()
     fk_new = map(add, fk, direction) 
-    ik = kin.inverse_kinematics(fk_new[0:3], fk_new[3:8])  # position & orientation
-    print ik
-    j=0
-    for i in joints:
-        joint = joints[j]
-        cmd[joint] = ik[j]
-        j+=1
+    ik = kin.inverse_kinematics(fk_new[0:3], neutral_quaternion)  # position & orientation
+    if ik is None:
+        print "Movement not possible"
+    else:
+        j=0
+        for i in joints:
+            joint = joints[j]
+            cmd[joint] = ik[j]
+            j+=1
 
 def map_joystick(joystick):
     """
@@ -65,12 +69,13 @@ def map_joystick(joystick):
     rcmd = {}
 
     # Directions
-    x = [0.1, 0, 0, 0, 0, 0, 0]
-    x_neg = [-0.1, 0, 0, 0, 0, 0, 0]
-    y = [0, 0.1, 0, 0, 0, 0, 0]
-    y_neg = [0, -0.1, 0, 0, 0, 0, 0]
-    z = [0, 0, 0.1, 0, 0, 0, 0]
-    z_neg = [0, 0, -0.1, 0, 0, 0, 0]
+    x = [0.05, 0, 0, 0, 0, 0, 0]
+    x_neg = [-0.05, 0, 0, 0, 0, 0, 0]
+    y = [0, 0.05, 0, 0, 0, 0, 0]
+    y_neg = [0, -0.05, 0, 0, 0, 0, 0]
+    z = [0, 0, 0.05, 0, 0, 0, 0]
+    z_neg = [0, 0, -0.05, 0, 0, 0, 0]
+    
     #available joints
     lj = left.joint_names()
     rj = right.joint_names()
@@ -92,47 +97,45 @@ def map_joystick(joystick):
     bindings_list = []
     bindings = (
         ((bdn, ['rightTrigger']),
-         (grip_left.close,  []), "left gripper close"),
+            (grip_left.close,  []), "left gripper close"),
         ((bup, ['rightTrigger']),
-         (grip_left.open,   []), "left gripper open"),
+            (grip_left.open,   []), "left gripper open"),
         ((bdn, ['leftTrigger']),
-         (grip_right.close, []), "right gripper close"),
+            (grip_right.close, []), "right gripper close"),
         ((bup, ['leftTrigger']),
-         (grip_right.open,  []), "right gripper open"),
+            (grip_right.open,  []), "right gripper open"),
         ((jlo, ['leftStickHorz']),
-         (set_j, [rcmd, x, rj]), lambda: "right inc " + rj[0]),
+            (set_j, [rcmd, y, rj]), "+y"),
         ((jhi, ['leftStickHorz']),
-         (set_j, [rcmd, x_neg, rj]), lambda: "right dec " + rj[0]),
-        # ((jlo, ['rightStickHorz']),
-        #  (set_j, [lcmd, left,  lj, 0,  0.1]), lambda: "left inc " + lj[0]),
-        # ((jhi, ['rightStickHorz']),
-        #  (set_j, [lcmd, left,  lj, 0, -0.1]), lambda: "left dec " + lj[0]),
+            (set_j, [rcmd, y_neg, rj]), "-y"),
         ((jlo, ['leftStickVert']),
-         (set_j, [rcmd, y, rj]), lambda: "right inc " + rj[1]),
+            (set_j, [rcmd, x, rj]), "+x"),
         ((jhi, ['leftStickVert']),
-         (set_j, [rcmd, y, rj]), lambda: "right dec " + rj[1]),
+            (set_j, [rcmd, x_neg, rj]), "-x"),
         ((jlo, ['rightStickVert']),
-         (set_j, [rcmd, z, rj]), lambda: "left inc " + lj[1]),
+            (set_j, [rcmd, z_neg, rj]), "-z"),
         ((jhi, ['rightStickVert']),
-         (set_j, [rcmd, z_neg, rj]), lambda: "left dec " + lj[1]),
+            (set_j, [rcmd, z, rj]), "+z"),
         ((bdn, ['rightBumper']),
-         (rotate, [lj]), "left: cycle joint"),
+            (reset_arm, [rcmd, rj]), "Reset arm"),
         ((bdn, ['leftBumper']),
-         (rotate, [rj]), "right: cycle joint"),
+            (reset_arm, [rcmd, rj]), "Reset Arm"),
         ((bdn, ['btnRight']),
-         (grip_left.calibrate, []), "left calibrate"),
+            (grip_left.calibrate, []), "left calibrate"),
         ((bdn, ['btnLeft']),
-         (grip_right.calibrate, []), "right calibrate"),
+            (grip_right.calibrate, []), "right calibrate"),
         ((bdn, ['function1']),
-         (print_help, [bindings_list]), "help"),
+            (print_help, [bindings_list]), "help"),
         ((bdn, ['function2']),
-         (print_help, [bindings_list]), "help"),
+            (print_help, [bindings_list]), "help"),
         )
     bindings_list.append(bindings)
 
     rate = rospy.Rate(100)
     # print_help(bindings_list)
+    
     print("Press Ctrl-C to stop. ")
+
     while not rospy.is_shutdown():
         for (test, cmd, doc) in bindings:
             if test[0](*test[1]):
@@ -150,31 +153,15 @@ def map_joystick(joystick):
         rate.sleep()
     return False
 
-
 def main():
-    """RSDK Joint Position Example: Joystick Control
-
-    Use a game controller to control the angular joint positions
-    of Baxter's arms.
-
-    Attach a game controller to your dev machine and run this
-    example along with the ROS joy_node to control the position
-    of each joint in Baxter's arms using the joysticks. Be sure to
-    provide your *joystick* type to setup appropriate key mappings.
-
-    Each stick axis maps to a joint angle; which joints are currently
-    controlled can be incremented by using the mapped increment buttons.
-    Ex:
-      (x,y -> e0,e1) >>increment>> (x,y -> e1,e2)
-    """
     epilog = """
 See help inside the example with the "Start" button for controller
 key bindings.
     """
     arg_fmt = argparse.RawDescriptionHelpFormatter
     parser = argparse.ArgumentParser(formatter_class=arg_fmt,
-                                     description=main.__doc__,
-                                     epilog=epilog)
+                                        description=main.__doc__,
+                                        epilog=epilog)
     required = parser.add_argument_group('required arguments')
     required.add_argument(
         '-j', '--joystick', required=True,
@@ -211,7 +198,6 @@ key bindings.
 
     map_joystick(joystick)
     print("Done.")
-
 
 if __name__ == '__main__':
     main()
