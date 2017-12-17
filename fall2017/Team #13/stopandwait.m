@@ -1,6 +1,7 @@
 calib_offset_w = 0.67;
 a = duck.april_tags;
 duck.sendCmd(0.1,calib_offset_w);
+% wait until an april tag is detected
 while ~(isempty(a) == 0 && a{1,1}.id == 1 && norm(a{1,1}.pos(1))<=0.45)
     a = duck.april_tags;
 end
@@ -46,10 +47,10 @@ while 1
             estimateGeometricTransform(matchedBasePoints, matchedScenePoints, 'affine');
         % draw a box for detection
         basePolygon = [1, 1;...                           % top-left
-            size(baseImage, 2), 1;...                 % top-right
-            size(baseImage, 2), size(baseImage, 1);... % bottom-right
-            1, size(baseImage, 1);...                 % bottom-left
-            1, 1];                   % top-left again to close the polygon
+            size(baseImage, 2), 1;...                     % top-right
+            size(baseImage, 2), size(baseImage, 1);...    % bottom-right
+            1, size(baseImage, 1);...                     % bottom-left
+            1, 1];                                        % top-left again to close the polygon
         newBasePolygon = transformPointsForward(tform, basePolygon);
 
         % toc;
