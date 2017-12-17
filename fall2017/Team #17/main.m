@@ -35,6 +35,7 @@ disp('If everything looks good, choose the mode you wish to use. Options:');
 prompt = 'Teleoperation (t) or Autonomous Navigation (a) or Color Control (c): ';
 mode = input(prompt, 's');
 
+% Teleoperation: Operate the robot via the keyboard. At intersections,control is passed to color_command
 if mode == 't'
     while 1
         pause(1);
@@ -42,9 +43,11 @@ if mode == 't'
         color_command(duck);
     end
 
+% Autonomous Navigation: Autonomous Lane Following. At intersections, control is passed to color_command
 elseif mode == 'a'
     auto_nav(duck);
 
+% Color Command: Executes a single maneuver (e.g. turn left, turn right, turn around, etc.) based on detected colors
 elseif mode == 'c'
     color_command(duck);
 
