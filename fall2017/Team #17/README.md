@@ -1,16 +1,16 @@
-Team #
+Team # 17
 
 
-Team Member: 
+Team Member: Jordan Charest & John Mata
 
 
-Email:
+Email: charej3@rpi.edu
 
 
-Project: 
+Project: Color-Controlled Duckiebot
 
 
-Description:
+Description: Autonomous Lane Following Duckiebot that makes navigation decisions at intersections based on the colors it sees
 
 
 
