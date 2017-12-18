@@ -34,15 +34,15 @@ while i<1000
     if sizeofPairs(1) >= 11
         matchedBasePoints = basePoints(basePairs(:, 1), :);
         matchedScenePoints = scenePoints(basePairs(:, 2), :);
-%         % drop the noises
+        % drop the noises, estimate the geometric transform
         [tform, inlierBasePoints, inlierScenePoints] = ...
             estimateGeometricTransform(matchedBasePoints, matchedScenePoints, 'affine');
-%         % draw a box for detection
+        % draw a box for detection
         basePolygon = [1, 1;...                           % top-left
-            size(baseImage, 2), 1;...                 % top-right
-            size(baseImage, 2), size(baseImage, 1);... % bottom-right
-            1, size(baseImage, 1);...                 % bottom-left
-            1, 1];                   % top-left again to close the polygon
+            size(baseImage, 2), 1;...                     % top-right
+            size(baseImage, 2), size(baseImage, 1);...    % bottom-right
+            1, size(baseImage, 1);...                     % bottom-left
+            1, 1];                                        % top-left again to close the polygon
         newBasePolygon = transformPointsForward(tform, basePolygon);
 
         % toc;
