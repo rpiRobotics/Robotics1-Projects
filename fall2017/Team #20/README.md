@@ -1,16 +1,16 @@
-Team #
+Team #20
 
 
-Team Member: 
+Team Member: Joseph Grella / Thomas DeMartino
 
 
-Email:
+Email: grellj@rpi.edu / demart@rpi.edu
 
 
-Project: 
+Project: Dynamic Modeling and Impedance Control
 
 
-Description:
+Description: 
 
 
 
