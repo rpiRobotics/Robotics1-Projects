@@ -18,11 +18,15 @@ from operator import add
 
 import math
 
+import numpy as np
+
+
 def reset_arm(cmd, joints):
     """
     Resets arm to zero configuration
     """
     reset_pose = [0, -math.pi/4, 0, math.pi/4, 0, math.pi/2, 0]
+    #reset_pose = [0,0,0,0,0,0,0]
     j=0
     for i in joints:
         joint = joints[j]
@@ -31,7 +35,7 @@ def reset_arm(cmd, joints):
     
 
 
-def set_j(cmd, direction, joints):
+def set_j(cmd, direction, joints, kin):
     """
     Set the selected joint to current pos + delta.
 
@@ -42,7 +46,6 @@ def set_j(cmd, direction, joints):
     joint/index is to make this work in the bindings.
     """
     neutral_quaternion = [0.49848584, 0.86663104, 0.02108932, -0.00421412]
-    kin = baxter_kinematics('right')
     fk = kin.forward_position_kinematics()
     fk_new = map(add, fk, direction) 
     ik = kin.inverse_kinematics(fk_new[0:3], neutral_quaternion)  # position & orientation
@@ -67,14 +70,15 @@ def map_joystick(joystick):
     grip_right = baxter_interface.Gripper('right', CHECK_VERSION)
     lcmd = {}
     rcmd = {}
+    kin = baxter_kinematics('right')
 
     # Directions
-    x = [0.05, 0, 0, 0, 0, 0, 0]
-    x_neg = [-0.05, 0, 0, 0, 0, 0, 0]
-    y = [0, 0.05, 0, 0, 0, 0, 0]
-    y_neg = [0, -0.05, 0, 0, 0, 0, 0]
-    z = [0, 0, 0.05, 0, 0, 0, 0]
-    z_neg = [0, 0, -0.05, 0, 0, 0, 0]
+    x = [0.01, 0, 0, 0, 0, 0, 0]
+    x_neg = [-0.01, 0, 0, 0, 0, 0, 0]
+    y = [0, 0.01, 0, 0, 0, 0, 0]
+    y_neg = [0, -0.01, 0, 0, 0, 0, 0]
+    z = [0, 0, 0.01, 0, 0, 0, 0]
+    z_neg = [0, 0, -0.01, 0, 0, 0, 0]
     
     #available joints
     lj = left.joint_names()
@@ -105,17 +109,17 @@ def map_joystick(joystick):
         ((bup, ['leftTrigger']),
             (grip_right.open,  []), "right gripper open"),
         ((jlo, ['leftStickHorz']),
-            (set_j, [rcmd, y, rj]), "+y"),
+            (set_j, [rcmd, y, rj, kin]), "+y"),
         ((jhi, ['leftStickHorz']),
-            (set_j, [rcmd, y_neg, rj]), "-y"),
+            (set_j, [rcmd, y_neg, rj, kin]), "-y"),
         ((jlo, ['leftStickVert']),
-            (set_j, [rcmd, x, rj]), "+x"),
+            (set_j, [rcmd, x, rj, kin]), "+x"),
         ((jhi, ['leftStickVert']),
-            (set_j, [rcmd, x_neg, rj]), "-x"),
+            (set_j, [rcmd, x_neg, rj, kin]), "-x"),
         ((jlo, ['rightStickVert']),
-            (set_j, [rcmd, z_neg, rj]), "-z"),
+            (set_j, [rcmd, z_neg, rj, kin]), "-z"),
         ((jhi, ['rightStickVert']),
-            (set_j, [rcmd, z, rj]), "+z"),
+            (set_j, [rcmd, z, rj, kin]), "+z"),
         ((bdn, ['rightBumper']),
             (reset_arm, [rcmd, rj]), "Reset arm"),
         ((bdn, ['leftBumper']),
@@ -169,7 +173,7 @@ key bindings.
         help='specify the type of joystick to use'
     )
     args = parser.parse_args(rospy.myargv()[1:])
-
+    
     joystick = None
     if args.joystick == 'xbox':
         joystick = baxter_external_devices.joystick.XboxController()
@@ -187,7 +191,7 @@ key bindings.
     init_state = rs.state().enabled
 
     def clean_shutdown():
-        print("\nExiting example.")
+        print("\nExiting joystick telemanipulation.")
         if not init_state:
             print("Disabling robot...")
             rs.disable()
