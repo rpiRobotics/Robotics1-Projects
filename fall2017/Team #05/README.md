@@ -1,16 +1,16 @@
-Team #
+Team #5
 
 
-Team Member: 
+Team Member: Jason Kraft, Aquiel Godeau, Wailana Chan
 
 
-Email:
+Email: kraftj3@rpi.edu
 
 
-Project: 
+Project: Teamgrapes
 
 
-Description:
+Description: Wifi signal strength analysis using robot localization
 
 
 
