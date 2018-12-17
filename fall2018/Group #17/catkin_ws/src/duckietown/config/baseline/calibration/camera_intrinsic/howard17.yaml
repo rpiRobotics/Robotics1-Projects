@@ -1,0 +1,20 @@
+image_width: 640
+image_height: 480
+camera_name: /howard17/camera_node
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [332.2320811980875, 0.0, 303.99639471767176, 0.0, 331.83983044550376, 234.62805751164456, 0.0, 0.0, 1.0]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.2671212546925449, 0.0514167505313171, 0.0011014824168935934, 0.00014760405552951511, 0.0]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [229.5611114501953, 0.0, 303.27238994002437, 0.0, 0.0, 273.1047668457031, 232.5733311540971, 0.0, 0.0, 0.0, 1.0, 0.0]

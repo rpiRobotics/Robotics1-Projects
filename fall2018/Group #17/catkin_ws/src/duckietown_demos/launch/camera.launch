@@ -1,0 +1,25 @@
+<launch>
+	<arg name="veh" default="$(env VEHICLE_NAME)"/>
+	<!-- start basic args -->
+	<include file="$(find duckietown_demos)/launch/master.launch">
+		<arg name="joystick" value="false" />
+    <arg name="wheels" value="false" />
+    <arg name="lane_following" value="false" />
+    <arg name="fsm" value="false" />
+    
+    <arg name="camera" default="true"/>
+	  <arg name="/camera/raw" default="true"/>
+	  <arg name="/camera/cam_info" default="true"/>
+	  <arg name="/camera/raw/rect" default="true"/>
+	  <arg name="/camera/local" default="true" />
+
+		<arg name="veh" value="howard17"/>
+		<arg name="visualization" default="true" />
+		<arg name="verbose" default="false" />
+		<arg name="param_file_name" default="default" />
+		<arg name="fsm_file_name" default="lane_following" />
+		<arg name="line_detector_param_file_name" default="default" />
+		<arg name="anti_instagram" default="true" />
+		<arg name="/lane_following/stop_line_filter" default="false" /> <!-- will not every allow a transition into COORDINATION mode -->
+	</include>
+</launch>

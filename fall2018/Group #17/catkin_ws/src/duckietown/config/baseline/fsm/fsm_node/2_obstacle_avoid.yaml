@@ -1,0 +1,70 @@
+# Initial state of the FSM
+initial_state: "LANE_FOLLOWING"
+
+events: #Maps from subscribing topic to signal ids
+  at_stop_line:
+    topic: "stop_line_filter_node/at_stop_line"
+    msg_type: "BoolStamped"
+    trigger: True
+  intersection_done:
+    topic: "open_loop_intersection_control_node/intersection_done"
+    msg_type: "BoolStamped"
+    trigger: True
+  road_blocked:
+    topic: "obstacle_safety_node/road_blocked"
+    msg_type: "BoolStamped"
+    trigger: True
+  road_blocked_done:
+    topic: "obstacle_safety_node/road_blocked"
+    msg_type: "BoolStamped"
+    trigger: False
+  lane_blocked:
+    topic: "obstacle_safety_node/lane_blocked"
+    msg_type: "BoolStamped"
+    trigger: True
+  lane_blocked_done:
+    topic: "obstacle_safety_node/lane_blocked"
+    msg_type: "BoolStamped"
+    trigger: False
+
+# Define nodes 
+nodes:
+  decoder_node: "decoder_node/switch"
+# anti_instagram_node: "anti_instagram/switch"
+  line_detector_node: "line_detector_node/switch"
+  lane_filter_node: "lane_filter_node/switch"
+  stop_line_filter_node: "stop_line_filter_node/switch"
+  framerate_high: "camera_node/framerate_high_switch"
+  obstacle_safety_node: "obstacle_safety_node/switch"
+
+# Define state transitions
+states:
+  LANE_FOLLOWING:
+    transitions:
+      at_stop_line: "INTERSECTION_CONTROL"
+      lane_blocked: "GO_AROUND"
+      road_blocked: "TURN_AROUND"
+    active_nodes:
+      - lane_filter_node
+      - line_detector_node
+      - stop_line_filter_node
+      - decoder_node
+      - obstacle_safety_node
+
+  INTERSECTION_CONTROL:
+    transitions:
+      intersection_done: "LANE_FOLLOWING"
+    active_nodes:
+      - line_detector_node
+      - lane_filter_node
+      - decoder_node
+  TURN_AROUND:
+    transitions:
+      road_blocked_done: "LANE_FOLLOWING"
+    active_nodes:
+      - decoder_node
+  GO_AROUND:
+    transitions:
+      lane_blocked_done: "LANE_FOLLOWING"
+    active_nodes:
+      - decoder_node

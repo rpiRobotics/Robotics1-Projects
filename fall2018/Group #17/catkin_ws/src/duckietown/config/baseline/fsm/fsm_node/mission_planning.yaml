@@ -1,0 +1,39 @@
+# Initial state of the FSM
+initial_state: "LANE_FOLLOWING"
+
+events: #Maps from subscribing topic to signal ids
+  at_stop_line:
+    topic: "stop_line_filter_node/at_stop_line"
+    msg_type: "BoolStamped"
+    trigger: True
+  intersection_done:
+    topic: "open_loop_intersection_control_node/intersection_done"
+    msg_type: "BoolStamped"
+    trigger: True
+    
+# Define nodes 
+nodes:
+  decoder_node: "decoder_node/switch"
+# anti_instagram_node: "anti_instagram/switch"
+  static_object_detector_node: "static_object_detector_node/switch"
+  line_detector_node: "line_detector_node/switch"
+  lane_filter_node: "lane_filter_node/switch"
+  stop_line_filter_node: "stop_line_filter_node/switch"
+  framerate_high: "camera_node/framerate_high_switch"
+  #open_loop_control: "open_loop_intersection_node/switch"
+
+# Define state transitions
+states:
+  LANE_FOLLOWING:
+    transitions:
+      at_stop_line: "INTERSECTION_CONTROL"
+    active_nodes:
+      - lane_filter_node
+      - line_detector_node
+      - stop_line_filter_node
+      - decoder_node
+  INTERSECTION_CONTROL:
+    transitions:
+      intersection_done: "LANE_FOLLOWING"
+    active_nodes:
+      - decoder_node
