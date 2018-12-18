@@ -1,0 +1,25 @@
+<launch>
+	<arg name="main_velocity" default="0.23" />
+	<arg name="kp_laneoffset" default="150.0" />
+	<arg name="kp_angle"      default="15.0" />
+	
+	<!--remap from="/bathduck/offset_following/computation/lane_pose" to="/bathduck/lane_filter_node/lane_pose" /-->
+	
+	<group ns="bathduck" >
+		<!-- Bind topics together -->
+		<group ns="offset_following">
+			<group ns="computation">
+				<remap from="path_plan/actual_lane_offset" to="lane_offset" />
+				<remap from="path_plan/lane_angle" to="lane_angle" />
+				<remap from="steer" to="path_plan/steer" />
+				
+				<param name="main_velocity" value="$(arg main_velocity)" />
+				<param name="path_plan/kp_laneoff" value="$(arg kp_laneoffset)" />
+				<param name="path_plan/kp_angle" value="$(arg kp_angle)" />
+				
+				<node name="extract_pose" pkg="morality" type="extract_pose" output="screen" />
+				<node name="path_plan" pkg="morality" type="path_plan" output="screen" />
+			</group>
+		</group>
+	</group>
+</launch>

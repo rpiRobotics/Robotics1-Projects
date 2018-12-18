@@ -1,0 +1,15 @@
+# heuristic enumeration
+int8 DEFAULT=-1
+int8 FEWEST_DEATHS=0
+int8 LEAST_INJURY=1
+int8 LEAST_COST=2
+int8 DONT_MOVE=3
+
+# request msg
+int8 heuristic
+duckietown_msgs/ObstacleProjectedDetectionList obstacles
+---
+# response msg
+float32 lane
+int8 collided
+float32 score
