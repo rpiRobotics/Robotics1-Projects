@@ -1,17 +1,22 @@
-Team #
+Team # 11
 
 
-Team Member: 
+Team Member: Heather Barscz and Xinyi ‘Sean’ Cai 
 
 
-Email:
+Email: barsch@rpi.edu & caix3@rpi.edu
 
 
-Project: 
+Project: The Hanoi Bot
 
 
-Description:
+Description: The Dobot plays the Tower of Hanoi with three disks
 
 
 
-Project Video Links: 
+Project Video Links:  
+
+Video 2- Final Hanoi Bot video (with sound)- https://youtu.be/KOTdzb5nQWc 
+
+
+Video 3- Final Hanoi Bot video (without sound)-  https://youtu.be/ZgDKOSl9JSQ 
